@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Clock</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.5.2/redux.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-with-addons.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/4.4.5/react-redux.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/dynamics.js/1.1.5/dynamics.min.js"></script>
+
+		<style type="text/css">
+			body{
+				background: #1e555c;
+				color: white;
+				font-size: 30px;
+				text-align: center;
+			}
+			#container{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+			#container .clock-title{
+				font-size: 50px;
+				margin-bottom: 20px;
+			}
+			#container .length-control{
+				width: 250px;
+			}
+			#container .length-control, #container .btn-level{
+				display: inline-block;
+			}
+			#container .length-control .btn-level:nth-child(3){
+				width: 40px;
+			}
+			#container button{
+				background: none;
+				outline: none;
+				border: none;
+				color: white;
+				cursor: pointer;
+			}
+			#container .timer{
+				border: 7px solid #13353a;
+				margin: 20px auto 10px auto;
+				width: 270px;
+				height: 160px;
+				border-radius: 50px;
+				position: relative;
+			}
+			#container .timer .timer-wrapper{
+				width: 190px;
+				height: 110px;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-top: -57px;
+				margin-left: -95px;
+			}
+			#container .timer #time-left{
+				font-size: 80px;
+				font-family: Digital;
+			}
+		</style>
+	</head>
+	<body>
+		<div  id="container">
+			<div id="app" ></div>
+		</div>
+		<!-- type="text/babel" -->
+	    <script type="text/babel">
+
+	    	
+			class Clock extends React.Component {
+				constructor(props){
+					super(props);
+					this.state = {
+						brkLength: 5,
+						seshLength: 25,
+						running: false,
+						timeLabel: 'Session',
+						timer: 1500,
+						interVal: '',
+						color: {color: 'white'},
+						disabled: false
+					}
+					this.setBrkLength = this.setBrkLength.bind(this);
+					this.setSeshLength = this.setSeshLength.bind(this);
+					this.timerControl = this.timerControl.bind(this);
+					this.clockify = this.clockify.bind(this);
+					this.reset = this.reset.bind(this);
+					this.beginCountDown = this.beginCountDown.bind(this);
+				}
+				setBrkLength(e){
+					if(e.currentTarget.value == '-' && this.state.brkLength !== 1){
+						this.setState({
+							brkLength: this.state.brkLength - 1
+						})
+					}else if(e.currentTarget.value == '+' && this.state.brkLength !== 60){
+						this.setState({
+							brkLength: this.state.brkLength + 1
+						})
+					}
+					
+				}	
+				clockify(){
+					let minutes = Math.floor(this.state.timer / 60);
+					let seconds = this.state.timer - minutes * 60;
+					minutes = minutes < 10 ? '0' + minutes : minutes;
+					seconds = seconds < 10 ? '0' + seconds : seconds;
+					return minutes + ':' + seconds;
+				}
+				setSeshLength(e){
+					if(e.currentTarget.value == '-' && this.state.seshLength !== 1){
+						this.setState({
+							seshLength: this.state.seshLength - 1,
+							timer: this.state.seshLength * 60 - 60
+						})
+					}else if(e.currentTarget.value == '+' && this.state.seshLength !== 60){
+						this.setState({
+							seshLength: this.state.seshLength + 1,
+							timer: this.state.seshLength * 60 + 60
+						})
+					}
+				}
+				timerControl(){
+					if(this.state.running == false){
+						this.beginCountDown();
+						this.setState({running: true, disabled: true})
+					}else{
+						this.setState({running: false, disabled: false})
+						if(this.state.interVal){
+							clearInterval(this.state.interVal)
+						}
+					}
+					
+				}
+				beginCountDown(){
+					this.setState({
+						interVal: setInterval(() => {
+							this.setState({timer : this.state.timer - 1});
+							if(this.state.timer < 61){
+								this.setState({color: {color: '#a50d0d'}})
+							}else{
+								this.setState({color: {color: 'white'}})
+							}
+							if(this.state.timer === 0){
+								this.refs.audioBeep.play();
+							}
+							if(this.state.timer < 0){
+								if(this.state.interVal){
+									clearInterval(this.state.interVal)
+								}
+								if(this.state.timeLabel === 'Session'){
+									this.beginCountDown();
+									this.setState({
+										timeLabel: 'Break',
+										color: {color: 'white'},
+										timer: this.state.brkLength * 60
+									})
+								}else{
+									this.beginCountDown();
+									this.setState({
+										timeLabel: 'Session',
+										color: {color: 'white'},
+										timer: this.state.seshLength * 60
+									})
+								}
+							}
+						}, 1000)
+					})
+				}
+				reset(){
+					this.setState({
+						brkLength: 5,
+						seshLength: 25,
+						running: false,
+						timeLabel: 'Session',
+						timer: 1500,
+						interVal: '',
+						color: {color: 'white'},
+						disabled: false
+					});
+					if(this.state.interVal){
+						clearInterval(this.state.interVal)
+					}
+					this.refs.audioBeep.pause();
+					this.refs.audioBeep.currentTime = 0;
+				}
+				render(){
+					return(
+						React.createElement("div", null,
+							React.createElement("div", {className: 'clock-title'}, 'Timing Clock'),
+							React.createElement("div", {className: 'length-control'}, 
+								React.createElement("div", {id: 'break-label'}, 'Break Length'),
+								React.createElement("button", {id: 'break-decrement', className: 'btn-level', value: '-', onClick: this.setBrkLength, disabled: this.state.disabled},
+									React.createElement("i", {className: 'fa fa-arrow-down fa-2x'})
+								),
+								React.createElement("div", {id: 'break-length', className: 'btn-level'}, this.state.brkLength),
+								React.createElement("button", {id: 'break-increment', className: 'btn-level', value: '+', onClick: this.setBrkLength, disabled: this.state.disabled},
+									React.createElement("i", {className: 'fa fa-arrow-up fa-2x'})
+								)
+							),
+							React.createElement("div", {className: 'length-control'},
+								React.createElement("div", {id: 'session-label'}, 'Session Length'),
+								React.createElement("button", {id: 'session-decrement', className: 'btn-level', value: '-', onClick: this.setSeshLength, disabled: this.state.disabled},
+									React.createElement("i", {className: 'fa fa-arrow-down fa-2x'})
+								),
+								React.createElement("div", {id: 'session-length', className: 'btn-level'},this.state.seshLength),
+								React.createElement("button", {id: 'session-increment', className: 'btn-level', value: '+', onClick: this.setSeshLength, disabled: this.state.disabled},
+									React.createElement("i", {className: 'fa fa-arrow-up fa-2x'})
+								)
+							),
+							React.createElement("div", {className: 'timer'},
+								React.createElement("div", {className: 'timer-wrapper', style: this.state.color},
+									React.createElement("div", {id: 'timer-label'}, this.state.timeLabel),
+									React.createElement("div", {id: 'time-left'}, this.clockify())
+								)
+							),
+							React.createElement("div", {className: 'timer-control'},
+								React.createElement("button", {id: 'start_stop', onClick: this.timerControl},
+									React.createElement("i", {className: 'fa fa-play fa-2x'}),
+									React.createElement("i", {className: 'fa fa-pause fa-2x'})
+								),
+								React.createElement("button", {id: 'reset', onClick: this.reset},
+									React.createElement("i", {className: 'fa fa-refresh fa-2x'})
+								)
+							),
+							React.createElement("audio", {id: 'beep', preload: 'auto',ref: 'audioBeep', src: 'https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav'})
+						)
+					)
+				}
+			}
+			ReactDOM.render(React.createElement(Clock, null), document.getElementById('app')			
+			);
+	   </script>  
+	</body>
+</html>
