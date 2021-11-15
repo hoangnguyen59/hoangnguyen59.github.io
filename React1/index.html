@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Random Quote</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.11.2/lodash.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.5.2/redux.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-with-addons.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/4.4.5/react-redux.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/dynamics.js/1.1.5/dynamics.min.js"></script>
+
+		<style type="text/css">
+			@import url("https://fonts.googleapis.com/css?family=Raleway:400,500");
+			* {
+			    margin: 0;
+			    padding: 0;
+			    list-style: none;
+			    vertical-align: baseline;
+			}
+			div {
+			    position: relative;
+			    z-index: 2;
+			}
+			body{
+				background-color: #333;
+				color: #333;
+				font-family: 'Raleway', sans-serif;
+				font-weight: 400;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+			#quote-box {
+			    border-radius: 3px;
+			    position: relative;
+			    width: 450px;
+			    padding: 40px 50px;
+			    display: table;
+			    background-color: #fff;
+			}
+			#quote-box .quote-text{
+				text-align: center;
+				width: 450px;
+				height: auto;
+				clear: both;
+				font-weight: 500;
+				font-size: 1.75em;
+			}
+			#quote-box .quote-text i{
+				font-size: 1em;
+				margin-right: 0.4em;
+			}
+			#quote-box .quote-author{
+				width: 450px;
+				height: auto;
+				clear: both;
+				padding-top: 20px;
+				font-size: 1em;
+				text-align: right;
+			}
+			#quote-box .buttons{
+				display: block;
+				margin: auto;
+				width: 450px;
+			}
+			#quote-box .buttons .button{
+				height: 38px;
+				border-radius: 3px;
+				border: none;
+				color: #fff;
+				font-size: 0.8em;
+				padding: 8px 18px 6px 16px;
+				margin-top: 30px;
+				cursor: pointer;
+				opacity: 1;
+				outline: none;
+			}
+			#quote-box .buttons .button:hover{
+				opacity: 0.9;
+			}
+			#quote-box .buttons .button3{
+				float: right;
+			}
+			#quote-box .buttons .button1,#quote-box .buttons .button2{
+				float: left;
+				text-align: center;
+				padding: 0;
+				padding-top: 8px;
+				text-align: center;
+				font-size: 1.2em;
+				height: 30px;
+				width: 40px;
+				margin-right: 5px;
+			}
+			.footer{
+				width: 450px;
+				text-align: center;
+				display: block;
+				font-size: 0.8em;
+				color: #fff;
+				margin: 15px auto 30px auto;
+				cursor: pointer;
+			}
+			#text{
+				animation: hoang 2s ease-out;
+			}
+			@keyframes hoang {
+				0%{opacity: 0;}
+				100%{opacity: 1;}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root" ></div>
+		<!-- type="text/babel" -->
+	    <script type="text/babel">
+	    	const {connect, Provider} = ReactRedux; 
+			const {createStore, compose} = Redux;
+			const {Component} = React;
+
+			class AppWrapper extends React.Component {
+				constructor(props){
+					super(props);
+					this.state = { 
+						quote: '',
+						author: ''
+					}
+					this.getNewQuote = this.getNewQuote.bind(this);
+				}
+				componentDidMount(){
+					this.getColor(),
+					this.getQuote()
+				}
+				getQuote(){
+					let url ="https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json";
+					axios.get(url).then(res => {
+						let data = res.data.quotes
+						let quoteNum = Math.floor(Math.random() * data.length)
+						let randomQuote = data[quoteNum]
+						this.setState({
+							quote: randomQuote['quote'],
+							author: randomQuote['author']
+						})
+					});
+					setTimeout(() => {
+						dynamics.animate(this.refs.a, {
+					      opacity: 1
+					    })
+					    dynamics.animate(this.refs.b, {
+					      opacity: 1
+					    })
+					},150)
+				}
+				getColor(){
+					const colors = ['#16a085',
+									'#27ae60',
+									'#2c3e50',
+									'#f39c12',
+									'#e74c3c',
+									'#9b59b6',
+									'#FB6964',
+									'#342224',
+									'#472E32',
+									'#BDBB99',
+									'#77B1A9',
+									'#73A857'];
+					
+					let	randomColor = Math.floor(Math.random() * colors.length);
+					let color = colors[randomColor];
+					return color;
+				}
+				getNewQuote(){
+					dynamics.animate(this.refs.a, {
+				      opacity: 0
+				    })
+				    dynamics.animate(this.refs.b, {
+				      opacity: 0
+				    })
+					setTimeout(() => {
+						this.getColor(),
+						this.getQuote()
+					},700)
+				}
+
+				render() {
+					const color = this.getColor();
+					document.body.style.backgroundColor = color;
+					document.body.style.color = color;
+					document.body.style.transition = "background-color 2.5s ease";
+			
+					return (
+				  		<div id="wrapper">
+				  			<div id="quote-box" style={{color: color,transition: "color 2.5s ease"}}>
+					  			<div className="quote-text">
+					  				<span id="text" ref="a"><i className="fa fa-quote-left"></i> {this.state.quote}</span>
+					  			</div>
+					  			<div className="quote-author">
+					  				<span id="author" ref="b">- {this.state.author}</span>
+					  			</div>
+					  			<div className="buttons">
+					  				<a className="button button1" id="tweet-quote" target="_top" href="https://twitter.com/intent/tweet" style={{backgroundColor: color,transition: "background-color 2.5s ease"}}>
+					  					<i className="fa fa-twitter"></i>
+					  				</a>
+					  				<a className="button button2" id="tumblr-quote" target="_blank" href="https://www.tumblr.com" style={{backgroundColor: color,transition: "background-color 2.5s ease"}}>
+					  					<i className="fa fa-tumblr"></i>
+					  				</a>
+					  				<button id="new-quote" className="button button3" style={{backgroundColor: color,transition: "background-color 2.5s ease"}} onClick={this.getNewQuote}>New quote</button>
+					    		</div>
+					  		</div>
+					  		<div className="footer">Cover By HoangNguyen</div>
+				  		</div>
+					);
+  				}
+			};
+
+			ReactDOM.render(
+			<AppWrapper />,
+			document.getElementById('root')			
+			);
+	   </script>  
+	</body>
+</html>
