@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>My Product</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.5.2/redux.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-with-addons.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/4.4.5/react-redux.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js" type="text/javascript"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.min.js"></script>
+		<script src='https://unpkg.com/react@16.3.1/umd/react.production.min.js'></script>
+	    <script src='https://unpkg.com/react-dom@16.3.1/umd/react-dom.production.min.js'></script>
+	    <script src='https://unpkg.com/react-router-dom@5.0.0/umd/react-router-dom.min.js'></script>
+	    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,400&amp;display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Raleway:700&amp;display=swap" rel="stylesheet">
+
+		<style type="text/css">
+			html{
+				box-sizing: border-box;
+				font-size: 62.5%;
+				scroll-behavior: smooth;
+			}
+			@media (max-width:  75rem) {
+				html{
+					font-size: 60%;
+				}
+			}
+			@media (max-width:  61.25rem) {
+				html{
+					font-size: 58%;
+				}
+			}
+			@media (max-width:  28.75rem) {
+				html{
+					font-size: 55%;
+				}
+			}
+			*, *::before, *::after {
+			    box-sizing: inherit;
+			}
+			* {
+			    margin: 0;
+			    padding: 0;
+			    overflow: auto;
+			}
+			body{
+				font-family: 'Poppins', sans-serif;
+				font-size: 1.8rem;
+			    font-weight: 400;
+			    line-height: 1.4;
+			    color: white;
+			}
+			.nav {
+				display: flex;
+				justify-content: flex-end;
+				position: fixed;
+			    top: 0;
+			    left: 0;
+			    width: 100%;
+			    background: #3586ff;
+			    box-shadow: 0 2px 0 rgb(255 255 255 / 40%);
+			    z-index: 10;
+			}
+			.nav ul{
+				list-style: none;
+			}
+			.nav .nav-list{
+				display: flex;
+				margin-right: 2rem;
+			}
+			.nav .nav-list a {
+				color: #fff;
+				text-decoration: none;
+				display: inline-block;
+				position: relative;
+				font-size: 2.2rem;
+				padding: 2rem;
+			}
+			.nav .nav-list a:after{
+				content: '';
+				position: absolute;
+				left: 0;
+				display: inline-block;
+				height: 1em;
+				width: 100%;
+				border-bottom: 1px solid;
+				margin-top: 10px;
+				opacity: 0;
+				-webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+				transition: opacity 0.35s, transform 0.35s;
+				-webkit-transform: scale(0,1);
+				transform: scale(0,1);
+			}
+			.nav .nav-list a:hover:after{
+				opacity: 1;
+				-webkit-transform: scale(1);
+				transform: scale(1);
+			}
+			a{
+				text-decoration: none;
+				color: #f0f0f0;
+			}
+			.welcome{
+				display: flex;
+			    flex-direction: column;
+			    justify-content: center;
+			    align-items: center;
+			    width: 100%;
+			    height: 100vh;
+			    background-color: #333;
+			}
+			h1, h2 {
+			    font-family: 'Raleway', sans-serif;
+			    font-weight: 700;
+			    text-align: center;
+			}
+			h1{
+			    font-size: 6rem;
+			}
+			h2 {
+				font-size: 4.2rem;
+			}
+			.welcome p{
+				font-size: 3rem;
+			    font-weight: 200;
+			    font-style: italic;
+			    color: #3586ff;
+			}
+			.welcome i{
+				position: relative;
+				top: 5px;
+				height: 40px;
+				animation: down 1s infinite ease;
+			}
+			@keyframes down {
+				0%{
+					top: 5px;
+				}
+				100%{
+					top: 15px;
+				}
+			}
+			.products{
+				text-align: center;
+			    padding: 8rem 2rem;
+			    background: #c7d8ff;
+			}
+			.products-header{
+				max-width: 640px;
+			    margin: 0 auto 6rem auto;
+			    color: #333;
+			    border-bottom: 0.2rem solid #333;
+			}
+			.products-grid{
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+				max-width: 1280px;
+				width: 100%;
+				margin: 0 auto;
+				grid-gap: 4rem;
+				margin-bottom: 6rem;
+			}
+			.products-grid .product{
+				background: #333;
+			    box-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
+			    border-radius: 2px;
+			}
+			.products-grid .product-image{
+				height: calc(100% - 6.8rem);
+			    width: 100%;
+			    object-fit: cover;
+			}
+			.products-grid .product-title{
+				font-size: 2rem;
+    			padding: 1.7rem 0.5rem;
+			}
+			.products-grid a:hover p{
+				color: #3586ff;
+			}
+			.btn-show-all{
+				display: inline-block;
+				padding: 1rem 2rem;
+				border-radius: 2px;
+				background: #333;
+				transition: background 0.3s ease-out;
+			}
+			.btn-show-all:hover{
+				background: #3586ff;
+			}
+			.end{
+				display: flex;
+			    flex-direction: column;
+			    justify-content: center;
+			    align-items: center;
+			    text-align: center;
+			    width: 100%;
+			    height: 70vh;
+			    padding: 0 2rem;
+			    background: #333;
+			}
+			.end .end-header h2{
+				font-size: 6rem;
+			}
+			.end .end-header p {
+				font-style: italic;
+				color: #3586ff;
+				font-size: 2rem;
+			}
+			footer{
+				position: relative;
+				background: #3586ff;
+				width: 100%;
+				min-height: 100px;
+				padding: 20px 50px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+			footer .social_icons{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				position: relative;
+				margin: 30px 0 10px 0;
+			}
+			footer .menu{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				position: relative;
+				margin: 0px 0;
+			}
+			footer .social_icons li, footer .menu li{
+				list-style: none;
+			}
+			footer .social_icons li a{
+				font-size: 2em;
+				color: #fff;
+				margin: 10px 10px 0px 10px;
+				display: inline-block;
+				transition: 0.5s ;
+			}
+			footer .social_icons li a:hover{
+				transform: translateY(-10px);
+			}
+			footer .menu li a{
+				font-size: 1.2em;
+				color: #fff;
+				margin: 0 10px;
+				display: inline-block;
+				opacity: 0.75;
+				text-decoration: none;
+			}
+			footer .menu li a:hover{
+				opacity: 1;
+			}
+			footer p{
+				color: #fff;
+				margin-top: 15px;
+				text-align: center;
+				margin-bottom: 10px;
+				font-size: 1.1em;
+			}
+			.waves{
+				position: relative;
+				background: #333;
+				width: 100%;
+				height: 100px;
+				z-index: -2000;
+			}
+			.wave{
+				position: relative;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100px;
+				background: url('https://i.ibb.co/MsftbKJ/wave.png');
+				background-size: 1000px 100px;
+				z-index: 1000;
+				opacity: 1;
+				bottom: 0;
+				animation: animateWave 4s linear infinite;
+			}
+			.wave:before{
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100px;
+				background: url('https://i.ibb.co/MsftbKJ/wave.png');
+				background-size: 1000px 100px;
+				z-index: 900;
+				opacity: 0.6;
+				bottom: 0;
+				animation: animateWave_02 2s linear infinite;
+			}
+			.wave:after{
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100px;
+				background: url('https://i.ibb.co/MsftbKJ/wave.png');
+				background-size: 1000px 100px;
+				z-index: 950;
+				opacity: 0.3;
+				bottom: 0;
+				animation: animateWave_03 3.5s linear infinite;
+			}
+			@keyframes animateWave{
+				0%{
+					background-position-x: 1000px;
+				}
+				100%{
+					background-position-x: 0px;
+				}
+			}
+			@keyframes animateWave_02{
+				0%{
+					background-position-x: 0px;
+				}
+				100%{
+					background-position-x: 1000px;
+				}
+			}
+			@keyframes animateWave_03{
+				0%{
+					background-position-x: 0px;
+				}
+				100%{
+					background-position-x: 1000px;
+				}
+			}
+			.about{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				text-align: center;
+				color: #fff;
+				background: #333;
+				width: 100%;
+			    height: 100vh;
+			    flex-direction: column;
+			}
+			.about h2{
+			    font-size: 4.2rem;
+			}
+			.about p{
+				font-size: 3rem;
+			    font-weight: 200;
+			    font-style: italic;
+			    color: #3586ff;
+			}
+			.contact{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				text-align: center;
+				color: #fff;
+				background: #333;
+				width: 100%;
+			    height: 100vh;
+			    flex-direction: column;
+			}
+			.contact h2{
+				font-size: 4.2rem;
+			}
+			.contact p{
+				font-size: 3rem;
+			    font-weight: 200;
+			    font-style: italic;
+			    color: #3586ff;
+			}
+			.contact p span{
+				color: white;
+				font-size: 3rem;
+			}
+			.btn-top {
+			    position: fixed;
+			    bottom: 10px;
+			    right: 43px;
+			    z-index: 3000;
+			    font-size: 18px;
+			    border: 1px solid white;
+			    outline: none;
+			    background-color: #3586ff;
+			    color: white;
+			    cursor: pointer;
+			    padding: 15px;
+			    border-radius: 50%;
+			}
+
+			.btn-top:hover {
+			  background-color: #555;
+			  color: #3586ff;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root" ></div>
+		<!-- type="text/babel" -->
+	    <script type="text/babel">
+	    	const Router = window.ReactRouterDOM.BrowserRouter;
+			const Route =  window.ReactRouterDOM.Route;
+			const Link =  window.ReactRouterDOM.Link;
+
+	    	class Home extends React.Component {
+	    		constructor(props) {
+	    			super(props);
+	    			this.state = {
+				      is_visible: false
+				    };
+  				}
+  				componentDidMount() {
+  					var scrollComponent = this;
+				    document.addEventListener("scroll", function(e) {
+				      scrollComponent.toggleVisibility();
+				    });
+  				}	
+  				toggleVisibility() {
+  					if (window.pageYOffset > 300) {
+				      this.setState({
+				        is_visible: true
+				      });
+				    } else {
+				      this.setState({
+				        is_visible: false
+				      });
+				    }
+				}
+
+				scrollToTop() {
+					window.scrollTo({
+				      top: 0
+				    });
+				}
+			  render() {
+			  	const { is_visible } = this.state;
+			    return (
+				    <div>
+				        <div className="welcome">
+				            <h1>Hey I am Hoang</h1>
+							<p>a web developer</p>
+							<i className="fa fa-arrow-down" aria-hidden="true"></i>
+				        </div>
+				        <div className="products">
+				        	<h2 className="products-header">These are some of my products</h2>
+				        	<div className="products-grid">
+				        		<a className="product product-tile" href="https://hoangnguyen59.github.io/React1/index.html" target="_blank">
+				        			<img className="product-image" src="https://i.ibb.co/thPg5pd/quote.jpg" alt="product" />
+				        			<p class="product-title">
+				        				Random Quote(ReactJS)
+				        			</p>
+				        		</a>
+				        		<a className="product product-tile" href="https://hoangnguyen59.github.io/React3/index.html" target="_blank">
+				        			<img className="product-image" src="https://i.ibb.co/J2bwJJX/Keyboard-electronical-piano-for-recording-music-in-a-studio-drumpads-music-pads.jpg" alt="product" />
+				        			<p class="product-title">
+				        				Drum Pad(ReactJS)
+				        			</p>
+				        		</a>
+				        		<a className="product product-tile" href="https://hoangnguyen59.github.io/React5/index.html" target="_blank">
+				        			<img className="product-image" src="https://i.ibb.co/dfhhXgR/clock1.jpg" alt="product" />
+				        			<p class="product-title">
+				        				Timing Clock(ReactJS)
+				        			</p>
+				        		</a>
+				        		<a className="product product-tile" href="https://hoangnguyen59.github.io/Node1/redirect1.html" target="_blank">
+				        			<img className="product-image" src="https://i.ibb.co/s5qq82k/shorten-url.png" alt="product" />
+				        			<p class="product-title">
+				        				Url Shortener(NodeJS)
+				        			</p>
+				        		</a>
+				        		<a className="product product-tile" href="https://hoangnguyen59.github.io/Node2/redirect2.html" target="_blank">
+				        			<img className="product-image" src="https://i.ibb.co/g46RLkR/db.jpg" alt="product" />
+				        			<p class="product-title">
+				        				Exercise Tracker(NodeJS)
+				        			</p>
+				        		</a>
+				        		<a className="product product-tile" href="https://hoangnguyen59.github.io/Node3/redirect3.html" target="_blank">
+				        			<img className="product-image" src="https://i.ibb.co/zVPLMRZ/upload2.png" alt="product" />
+				        			<p class="product-title">
+				        				File Metadata(NodeJS)
+				        			</p>
+				        		</a>
+				        	</div>
+				        	<a href="#" className="btn-show-all">
+								More
+							</a>
+				        </div>
+				        <div className="end">
+				        	<div className="end-header">
+				        		<h2>Thanks for watching...</h2>
+								<p>I will make more products in the future</p>
+				        	</div>
+				        </div>
+				        <div class="waves">
+							<div class="wave" id="wave1"></div>
+						</div>
+				        <footer>
+							<ul class="social_icons">
+								<li><a href="https://facebook.com/" target="_blank"><i class="fa fa-facebook-square" aria-hidden="true"></i></a></li>
+								<li><a href="https://twitter.com/" target="_blank"><i class="fa fa-twitter-square" aria-hidden="true"></i></a></li>
+								<li><a href="https://www.linkedin.com/" target="_blank"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+								<li><a href="https://www.instagram.com/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+								<li><a href="https://github.com/" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+							</ul>
+							<ul class="menu">
+								<li><a href="#">Home</a></li>
+								<li><a href="#">About</a></li>
+								<li><a href="#">Services</a></li>
+								<li><a href="#">Team</a></li>
+								<li><a href="#">Contact</a></li>
+							</ul>
+							<p>© Created by Hoang Nguyen</p>
+			        	</footer>
+			        	<div className="scroll-to-top">
+							{is_visible && (
+					          <div onClick={() => this.scrollToTop()} className="btn-top">
+					            <i className="fa fa-arrow-up" aria-hidden="true"></i>
+					          </div>
+					        )}
+						</div>
+				    </div>
+			    );
+			  }
+			}
+			class About extends React.Component {
+			  render() {
+			    return (
+			        <div className="about">
+						<h2>About myself</h2>
+						<p>
+							Wish to create the best and best quality products to customers.<br/>
+							Work hard and practice to develop yourself more.<br/>
+							Eager to learn and absorb new technologies.
+						</p>
+			        </div>
+			    );
+			  }
+			}
+			class Contact extends React.Component {
+			  render() {
+			    return (
+			        <div className="contact">
+						<h2>Contacts</h2>
+						<p>
+							<span>Email : </span>hoangnguyen0596@gmail.com<span> Or </span>hoangnguyen96.art@gmail.com<br/>
+							<span>Phone : </span>+84 982015124
+			            </p>
+			        </div>
+			    );
+			  }
+			}
+	    	class App extends React.Component {
+	    		
+			  render() {
+			    return (
+			    <ReactRouterDOM.HashRouter>
+					<nav id="navbar" className="nav">
+						<ul className="nav-list">
+							<li><Link to="/">Home</Link></li>
+							<li><Link to="/about">About Us</Link></li>
+							<li><Link to="/contacts">Contacts</Link></li>
+						</ul>
+					</nav>
+
+					<Route path="/" exact component={Home} />
+					<Route path="/about" component={About} />
+					<Route path="/contacts" component={Contact} />
+		        </ReactRouterDOM.HashRouter>
+			    );
+			  }
+			}
+	    	ReactDOM.render(<App />, document.getElementById('root'));
+	   </script>  
+	</body>
+</html>
